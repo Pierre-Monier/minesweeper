@@ -16,4 +16,16 @@ void main() {
 
     expect(mine.displayMode.value, DisplayMode.revealed);
   });
+
+  test('can be set in flag display mode', () {
+    final mine = Mine();
+
+    mine.toggleFlag();
+
+    expect(mine.displayMode.value, DisplayMode.flagged);
+
+    mine.toggleFlag();
+
+    expect(mine.displayMode.value, DisplayMode.hidden);
+  });
 }

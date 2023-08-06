@@ -10,6 +10,12 @@ abstract class Cell {
 
   ValueNotifier<DisplayMode> displayMode;
 
+  void toggleFlag() {
+    displayMode.value = displayMode.value == DisplayMode.flagged
+        ? DisplayMode.hidden
+        : DisplayMode.flagged;
+  }
+
   void reveal();
 
   int get minesAround => neighbors.whereType<Mine>().length;
@@ -23,4 +29,5 @@ abstract class Cell {
 enum DisplayMode {
   hidden,
   revealed,
+  flagged,
 }

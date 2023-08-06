@@ -8,3 +8,18 @@ class GameNotifier extends ValueNotifier<Game> {
     value = Game();
   }
 }
+
+class GameNotifierProvider extends InheritedWidget {
+  GameNotifierProvider({required super.child});
+
+  final gameNotifier = GameNotifier(Game());
+
+  @override
+  bool updateShouldNotify(covariant GameNotifierProvider oldWidget) {
+    return false;
+  }
+
+  static GameNotifierProvider of(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<GameNotifierProvider>()!;
+  }
+}

@@ -33,6 +33,8 @@ class Game {
   /// Used to know on which mine we should put a red background
   final ValueNotifier<Cell?> firstRevealedMine = ValueNotifier(null);
 
+  final ValueNotifier<GameMove> gameMove = ValueNotifier(GameMove.reveal);
+
   static const _defaultNumberOfRows = 10;
 
   static List<Cell> _generateCellsWithNeighbors(List<List<Cell>> cellsData) {
@@ -108,9 +110,18 @@ class Game {
 
     _handleStartGame();
 
-    cell.reveal();
+    _actOnCell(cell);
 
     _handleEndGame();
+  }
+
+  void _actOnCell(Cell cell) {
+    switch (gameMove.value) {
+      case GameMove.reveal:
+        cell.reveal();
+      case GameMove.flag:
+        cell.toggleFlag();
+    }
   }
 
   void _handleStartGame() {
@@ -168,7 +179,14 @@ class Game {
     gameStatus.value = newStatus;
   }
 
+  void toggleFlag() {
+    gameMove.value =
+        gameMove.value == GameMove.flag ? GameMove.reveal : GameMove.flag;
+  }
+
   bool get _isGameEnd => gameStatus.value != GameStatus.onGoing;
 }
 
 enum GameStatus { onGoing, loose, win }
+
+enum GameMove { reveal, flag }

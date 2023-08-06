@@ -46,4 +46,16 @@ void main() {
       true,
     );
   });
+
+  test('can be set in flag display mode', () {
+    final safe = Safe();
+
+    safe.toggleFlag();
+
+    expect(safe.displayMode.value, DisplayMode.flagged);
+
+    safe.toggleFlag();
+
+    expect(safe.displayMode.value, DisplayMode.hidden);
+  });
 }

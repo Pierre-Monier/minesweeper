@@ -79,4 +79,16 @@ void main() {
     // expect(game.timeSpend.value.inMicroseconds > 0, isTrue);
     expect(game.gameStatus.value, GameStatus.win);
   });
+
+  test('game can be in flag game move', () {
+    final game = Game();
+
+    game.toggleFlag();
+
+    expect(game.gameMove.value, GameMove.flag);
+
+    game.toggleFlag();
+
+    expect(game.gameMove.value, GameMove.reveal);
+  });
 }

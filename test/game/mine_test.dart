@@ -4,16 +4,16 @@ import 'package:mines_sweeper/game/mine.dart';
 
 void main() {
   test('default display mode should be hidden', () {
-    final mine = Mine(neighbors: []);
+    final mine = Mine();
 
-    expect(mine.displayMode, DisplayMode.hidden);
+    expect(mine.displayMode.value, DisplayMode.hidden);
   });
 
   test('revealing a mine cell changes its display mode to revealed', () {
-    final mine = Mine(neighbors: []);
+    final mine = Mine();
 
     mine.reveal();
 
-    expect(mine.displayMode, DisplayMode.revealed);
+    expect(mine.displayMode.value, DisplayMode.revealed);
   });
 }

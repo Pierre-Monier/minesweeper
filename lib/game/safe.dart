@@ -1,16 +1,16 @@
 import 'package:mines_sweeper/game/cell.dart';
 
 class Safe extends Cell {
-  Safe({required super.neighbors});
+  Safe();
 
   @override
   void reveal() {
-    displayMode = DisplayMode.revealed;
+    displayMode.value = DisplayMode.revealed;
 
     if (minesAround != 0) return;
 
     final hiddenNeighbors =
-        neighbors.where((n) => n.displayMode == DisplayMode.hidden);
+        neighbors.where((n) => n.displayMode.value == DisplayMode.hidden);
 
     for (final hiddenNeighbor in hiddenNeighbors) {
       hiddenNeighbor.reveal();

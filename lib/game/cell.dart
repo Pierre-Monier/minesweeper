@@ -1,15 +1,23 @@
+import 'package:flutter/foundation.dart';
 import 'package:mines_sweeper/game/mine.dart';
 
 abstract class Cell {
-  Cell({required this.neighbors, this.displayMode = DisplayMode.hidden});
+  Cell()
+      : neighbors = [],
+        displayMode = ValueNotifier(DisplayMode.hidden);
 
   final List<Cell> neighbors;
 
-  DisplayMode displayMode;
+  ValueNotifier<DisplayMode> displayMode;
 
   void reveal();
 
   int get minesAround => neighbors.whereType<Mine>().length;
+
+  @override
+  String toString() {
+    return '$runtimeType#$hashCode, neighbors [${neighbors.map((e) => '${e.runtimeType}#${e.hashCode}').join(',')}]';
+  }
 }
 
 enum DisplayMode {

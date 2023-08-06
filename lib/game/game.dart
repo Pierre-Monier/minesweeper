@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
 import 'package:mines_sweeper/extension/list.dart';
 import 'package:mines_sweeper/game/cell.dart';
 import 'package:mines_sweeper/game/mine.dart';
@@ -20,6 +21,12 @@ class Game {
   final int numberOfMines;
 
   late final List<Cell> cells;
+
+  /// Start when first cell is tap
+  final Stopwatch stopwatch = Stopwatch();
+
+  /// Is not null when the game is lost
+  ValueNotifier<Cell?> firstRevealedMine = ValueNotifier(null);
 
   static const _defaultNumberOfRows = 10;
 
@@ -86,5 +93,34 @@ class Game {
     }
 
     return cellsData;
+  }
+
+  void tapCell(Cell cell) {
+    if (cell.displayMode.value == DisplayMode.revealed ||
+        firstRevealedMine.value != null) {
+      return;
+    }
+
+    _handleStartGame();
+
+    cell.reveal();
+
+    _handleEndGame();
+  }
+
+  void _handleStartGame() {
+    if (!stopwatch.isRunning) {
+      stopwatch.start();
+    }
+  }
+
+  void _handleEndGame() {
+    firstRevealedMine.value = cells.firstWhereOrNull(
+      (e) => e is Mine && e.displayMode.value == DisplayMode.revealed,
+    );
+
+    if (firstRevealedMine.value != null) {
+      stopwatch.stop();
+    }
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mines_sweeper/game/game.dart';
-import 'package:mines_sweeper/game/mine.dart';
 import 'package:mines_sweeper/notifier/game.notifier.dart';
+import 'package:mines_sweeper/ui/cell_tile.dart';
 
 void main() {
   runApp(const MyApp());
@@ -47,20 +47,22 @@ class _MyHomePageState extends State<MyHomePage> {
         tooltip: 'Reset game',
         child: const Icon(Icons.restore),
       ),
-      body: ValueListenableBuilder(
-        valueListenable: _gameNotifier,
-        builder: (context, value, child) => GridView.count(
-          crossAxisCount: value.rows,
-          children: value.cells
-              .map(
-                (e) => ColoredBox(
-                  color: e is Mine ? Colors.red : Colors.transparent,
-                  child: Text(
-                    e.runtimeType.toString(),
-                  ),
-                ),
-              )
-              .toList(),
+      body: DecoratedBox(
+        decoration: BoxDecoration(
+          // color: Colors.yellow,
+          border: Border.all(color: Colors.yellow),
+        ),
+        child: ValueListenableBuilder(
+          valueListenable: _gameNotifier,
+          builder: (context, value, child) => GridView.count(
+            shrinkWrap: true,
+            crossAxisCount: value.rows,
+            children: value.cells
+                .map(
+                  (e) => CellTile(cell: e, onCellTap: () => value.tapCell(e)),
+                )
+                .toList(),
+          ),
         ),
       ),
     );

@@ -1,0 +1,4 @@
+include: package:lint/strict.yaml 
+
+linter:
+  rules:

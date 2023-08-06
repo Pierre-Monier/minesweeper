@@ -16,7 +16,7 @@ abstract class Cell {
 
   @override
   String toString() {
-    return '$runtimeType#$hashCode, neighbors [${neighbors.map((e) => '${e.runtimeType}#${e.hashCode}').join(',')}]';
+    return '$runtimeType#$hashCode, displayMode #${displayMode.value},neighbors [${neighbors.map((e) => '${e.runtimeType}#${e.hashCode}').join(',')}]';
   }
 }
 

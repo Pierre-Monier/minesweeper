@@ -4,6 +4,7 @@ import 'package:mines_sweeper/extension/list.dart';
 import 'package:mines_sweeper/game/cell.dart';
 import 'package:mines_sweeper/game/mine.dart';
 import 'package:mines_sweeper/game/safe.dart';
+import 'package:mines_sweeper/notifier/time_spend_notifier.dart';
 
 class Game {
   Game({
@@ -23,10 +24,14 @@ class Game {
   late final List<Cell> cells;
 
   /// Start when first cell is tap
-  final Stopwatch stopwatch = Stopwatch();
+  final TimeSpendNotifier timeSpend = TimeSpendNotifier(Duration.zero);
 
   /// Is not null when the game is lost
-  ValueNotifier<Cell?> firstRevealedMine = ValueNotifier(null);
+  final ValueNotifier<GameStatus> gameStatus =
+      ValueNotifier(GameStatus.onGoing);
+
+  /// Used to know on which mine we should put a red background
+  final ValueNotifier<Cell?> firstRevealedMine = ValueNotifier(null);
 
   static const _defaultNumberOfRows = 10;
 
@@ -97,7 +102,7 @@ class Game {
 
   void tapCell(Cell cell) {
     if (cell.displayMode.value == DisplayMode.revealed ||
-        firstRevealedMine.value != null) {
+        gameStatus.value != GameStatus.onGoing) {
       return;
     }
 
@@ -109,18 +114,61 @@ class Game {
   }
 
   void _handleStartGame() {
-    if (!stopwatch.isRunning) {
-      stopwatch.start();
+    if (!timeSpend.isRunning) {
+      timeSpend.start();
     }
   }
 
   void _handleEndGame() {
-    firstRevealedMine.value = cells.firstWhereOrNull(
+    if (!_isGameEnd) {
+      _handleGameWin();
+    }
+
+    if (!_isGameEnd) {
+      _handleGameFailure();
+    }
+  }
+
+  void _handleGameWin() {
+    final revealedSafeCell = cells
+        .where((e) => e is Safe && e.displayMode.value == DisplayMode.revealed);
+
+    final hasWin = revealedSafeCell.length == cells.length - numberOfMines;
+
+    if (hasWin) {
+      _endGame(GameStatus.win);
+    }
+  }
+
+  void _handleGameFailure() {
+    final revealedMine = cells.firstWhereOrNull(
       (e) => e is Mine && e.displayMode.value == DisplayMode.revealed,
     );
 
-    if (firstRevealedMine.value != null) {
-      stopwatch.stop();
+    if (revealedMine == null) return;
+
+    _endGame(GameStatus.loose);
+    firstRevealedMine.value = revealedMine;
+
+    final everyNonRevealedMine =
+        cells.where((e) => e is Mine && e != firstRevealedMine.value);
+
+    for (final mine in everyNonRevealedMine) {
+      mine.reveal();
     }
   }
+
+  void _endGame(GameStatus newStatus) {
+    assert(
+      newStatus != GameStatus.onGoing,
+      "You should not end game with onGoing status",
+    );
+
+    timeSpend.stop();
+    gameStatus.value = newStatus;
+  }
+
+  bool get _isGameEnd => gameStatus.value != GameStatus.onGoing;
 }
+
+enum GameStatus { onGoing, loose, win }

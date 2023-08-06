@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:mines_sweeper/game/cell.dart';
 import 'package:mines_sweeper/game/mine.dart';
+import 'package:mines_sweeper/notifier/first_revealed_mine.dart';
 
 class CellTile extends StatelessWidget {
-  const CellTile({required this.cell, required this.onCellTap, super.key});
+  const CellTile({
+    required this.cell,
+    required this.onCellTap,
+    super.key,
+  });
 
   final VoidCallback onCellTap;
   final Cell cell;
@@ -42,9 +47,11 @@ class _RevealCellTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final firstRevealedMine = FirstRevealedMine.of(context).mine;
+
     return ColoredBox(
-      color: cell is Mine ? Colors.red : Colors.transparent,
-      child: Text(cell.minesAround.toString()),
+      color: cell == firstRevealedMine ? Colors.red : Colors.transparent,
+      child: Text(cell is Mine ? 'X' : cell.minesAround.toString()),
     );
   }
 }

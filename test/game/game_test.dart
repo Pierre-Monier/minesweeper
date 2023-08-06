@@ -14,6 +14,13 @@ void main() {
     );
   }
 
+  void revealEveryCell<T extends Cell>(Game game) {
+    for (final cell in game.cells
+        .where((e) => e is T && e.displayMode.value != DisplayMode.revealed)) {
+      game.tapCell(cell);
+    }
+  }
+
   test('game should generate cells', () {
     const rows = 2;
     final game = Game(rows: rows);
@@ -27,8 +34,8 @@ void main() {
       ),
       isTrue,
     );
-    expect(game.stopwatch.isRunning, isFalse);
-    expect(game.firstRevealedMine.value, null);
+    expect(game.timeSpend.isRunning, isFalse);
+    expect(game.gameStatus.value, GameStatus.onGoing);
   });
 
   test('game should start on first cell tap', () {
@@ -36,18 +43,40 @@ void main() {
 
     revealFirstCell<Safe>(game);
 
-    expect(game.stopwatch.isRunning, isTrue);
+    expect(game.timeSpend.isRunning, isTrue);
 
-    game.stopwatch.stop();
+    game.timeSpend.stop();
   });
 
-  test('game should end if a mine is tapped', () {
+  test('game should end if a mine is tapped', () async {
     final game = Game();
 
     revealFirstCell<Safe>(game);
+
     revealFirstCell<Mine>(game);
 
-    expect(game.stopwatch.isRunning, isFalse);
-    expect(game.stopwatch.elapsedMicroseconds > 0, isTrue);
+    expect(game.timeSpend.isRunning, isFalse);
+
+    // TODO(Pierre): use fakeAsync to test this code
+    // expect(game.timeSpend.value.inMicroseconds > 0, isTrue);
+    expect(game.gameStatus.value, GameStatus.loose);
+    expect(game.firstRevealedMine.value, isNotNull);
+    expect(
+      game.cells.where(
+        (e) => e is Mine && e.displayMode.value != DisplayMode.revealed,
+      ),
+      isEmpty,
+    );
+  });
+
+  test('game should end if every safe cell are revealed', () {
+    final game = Game();
+
+    revealEveryCell<Safe>(game);
+
+    expect(game.timeSpend.isRunning, isFalse);
+    // TODO(Pierre): use fakeAsync to test this code
+    // expect(game.timeSpend.value.inMicroseconds > 0, isTrue);
+    expect(game.gameStatus.value, GameStatus.win);
   });
 }

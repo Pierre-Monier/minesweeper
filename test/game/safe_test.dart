@@ -23,6 +23,9 @@ void main() {
     safe.neighbors.addAll(
       [Safe(), Safe(), Safe()],
     );
+
+    safe.neighbors.first.toggleFlag();
+    safe.neighbors.last.toggleQuestion();
     safe.reveal();
 
     expect(

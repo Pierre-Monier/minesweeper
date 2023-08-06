@@ -10,7 +10,7 @@ class Safe extends Cell {
     if (minesAround != 0) return;
 
     final hiddenNeighbors =
-        neighbors.where((n) => n.displayMode.value == DisplayMode.hidden);
+        neighbors.where((n) => n.displayMode.value != DisplayMode.revealed);
 
     for (final hiddenNeighbor in hiddenNeighbors) {
       hiddenNeighbor.reveal();

@@ -121,6 +121,8 @@ class Game {
         cell.reveal();
       case GameMove.flag:
         cell.toggleFlag();
+      case GameMove.question:
+        cell.toggleQuestion();
     }
   }
 
@@ -184,9 +186,15 @@ class Game {
         gameMove.value == GameMove.flag ? GameMove.reveal : GameMove.flag;
   }
 
+  void toggleQuestion() {
+    gameMove.value = gameMove.value == GameMove.question
+        ? GameMove.reveal
+        : GameMove.question;
+  }
+
   bool get _isGameEnd => gameStatus.value != GameStatus.onGoing;
 }
 
 enum GameStatus { onGoing, loose, win }
 
-enum GameMove { reveal, flag }
+enum GameMove { reveal, flag, question }

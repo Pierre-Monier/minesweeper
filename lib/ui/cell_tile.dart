@@ -31,6 +31,8 @@ class CellTile extends StatelessWidget {
             return _FlagCellTile(
               cell: cell,
             );
+          case DisplayMode.questioned:
+            return _QuestionCellTile(cell: cell);
         }
       },
     );
@@ -77,13 +79,53 @@ class _FlagCellTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return _ToggleCellTile(
+      cell: cell,
+      icon: const Icon(Icons.flag),
+      onPressed: (game, gameMove) =>
+          gameMove == GameMove.flag ? () => game.tapCell(cell) : null,
+    );
+  }
+}
+
+class _QuestionCellTile extends StatelessWidget {
+  const _QuestionCellTile({required this.cell});
+
+  final Cell cell;
+
+  @override
+  Widget build(BuildContext context) {
+    return _ToggleCellTile(
+      cell: cell,
+      icon: const Icon(Icons.question_mark),
+      onPressed: (game, gameMove) =>
+          gameMove == GameMove.question ? () => game.tapCell(cell) : null,
+    );
+  }
+}
+
+class _ToggleCellTile extends StatelessWidget {
+  const _ToggleCellTile({
+    required this.cell,
+    required this.icon,
+    required this.onPressed,
+  });
+
+  final Cell cell;
+
+  final Widget icon;
+
+  final VoidCallback? Function(Game game, GameMove gameMove) onPressed;
+
+  @override
+  Widget build(BuildContext context) {
     final game = GameNotifierProvider.of(context).gameNotifier.value;
 
     return ValueListenableBuilder(
       valueListenable: game.gameMove,
       builder: (context, gameMove, child) => IconButton(
-        onPressed: gameMove == GameMove.flag ? () => game.tapCell(cell) : null,
-        icon: const Icon(Icons.flag),
+        onPressed: onPressed(game, gameMove),
+        icon: icon,
       ),
     );
   }

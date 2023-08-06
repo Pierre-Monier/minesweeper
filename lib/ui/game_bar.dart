@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mines_sweeper/game/game.dart';
 import 'package:mines_sweeper/notifier/game.notifier.dart';
+import 'package:mines_sweeper/ui/game_move_button.dart';
 
 class GameBar extends StatelessWidget {
   const GameBar({super.key});
@@ -19,15 +20,17 @@ class GameBar extends StatelessWidget {
             onPressed: gameNotifier.resetGame,
             icon: const Icon(Icons.restore),
           ),
-          ValueListenableBuilder(
-            valueListenable: game.gameMove,
-            builder: (context, gameMove, _) => IconButton(
-              color: gameMove == GameMove.flag ? Colors.yellow : null,
-              onPressed: () {
-                game.toggleFlag();
-              },
-              icon: const Icon(Icons.flag),
-            ),
+          GameMoveButton(
+            gameMove: game.gameMove,
+            activeGameMove: GameMove.flag,
+            onPressed: game.toggleFlag,
+            icon: const Icon(Icons.flag),
+          ),
+          GameMoveButton(
+            gameMove: game.gameMove,
+            activeGameMove: GameMove.question,
+            onPressed: game.toggleQuestion,
+            icon: const Icon(Icons.question_mark),
           ),
           ListenableBuilder(
             listenable: game.timeSpend,

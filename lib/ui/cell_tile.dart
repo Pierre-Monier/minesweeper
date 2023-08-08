@@ -4,6 +4,9 @@ import 'package:mines_sweeper/game/game.dart';
 import 'package:mines_sweeper/game/mine.dart';
 import 'package:mines_sweeper/notifier/first_revealed_mine.dart';
 import 'package:mines_sweeper/notifier/game.notifier.dart';
+import 'package:mines_sweeper/ui/old_school_border.dart';
+import 'package:mines_sweeper/ui/theme/color.dart';
+import 'package:mines_sweeper/ui/theme/typographie.dart';
 
 class CellTile extends StatelessWidget {
   const CellTile({
@@ -17,24 +20,29 @@ class CellTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder(
-      valueListenable: cell.displayMode,
-      builder: (context, value, child) {
-        switch (value) {
-          case DisplayMode.hidden:
-            return _HiddenCellTile(
-              onCellTap: onCellTap,
-            );
-          case DisplayMode.revealed:
-            return _RevealCellTile(cell: cell);
-          case DisplayMode.flagged:
-            return _FlagCellTile(
-              cell: cell,
-            );
-          case DisplayMode.questioned:
-            return _QuestionCellTile(cell: cell);
-        }
-      },
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        border: Border.all(color: GameColor.cellBorderColor, width: 0.5),
+      ),
+      child: ValueListenableBuilder(
+        valueListenable: cell.displayMode,
+        builder: (context, value, child) {
+          switch (value) {
+            case DisplayMode.hidden:
+              return _HiddenCellTile(
+                onCellTap: onCellTap,
+              );
+            case DisplayMode.revealed:
+              return _RevealCellTile(cell: cell);
+            case DisplayMode.flagged:
+              return _FlagCellTile(
+                cell: cell,
+              );
+            case DisplayMode.questioned:
+              return _QuestionCellTile(cell: cell);
+          }
+        },
+      ),
     );
   }
 }
@@ -46,9 +54,11 @@ class _HiddenCellTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onCellTap,
-      child: const SizedBox.shrink(),
+    return OldSchoolBorder(
+      child: InkWell(
+        onTap: onCellTap,
+        child: const SizedBox.shrink(),
+      ),
     );
   }
 }
@@ -58,15 +68,27 @@ class _RevealCellTile extends StatelessWidget {
 
   final Cell cell;
 
+  String get _minesAroundText =>
+      cell.minesAround > 0 ? cell.minesAround.toString() : '';
+
+  Color? get _minesAroundTextColor => cell.minesAround > 0
+      ? GameColor.minesAroundColor[cell.minesAround - 1]
+      : null;
+
   @override
   Widget build(BuildContext context) {
     final firstRevealedMine = FirstRevealedMine.of(context).mine;
 
-    return ColoredBox(
-      color: cell == firstRevealedMine ? Colors.red : Colors.transparent,
-      child: Text(
-        cell is Mine ? 'X' : cell.minesAround.toString(),
-        textAlign: TextAlign.center,
+    return Center(
+      child: ColoredBox(
+        color: cell == firstRevealedMine ? Colors.red : Colors.transparent,
+        child: Text(
+          cell is Mine ? 'X' : _minesAroundText,
+          textAlign: TextAlign.center,
+          style: GameTypographie.cellTextStyle.copyWith(
+            color: _minesAroundTextColor,
+          ),
+        ),
       ),
     );
   }

@@ -10,37 +10,31 @@ class GameBody extends StatelessWidget {
   Widget build(BuildContext context) {
     final gameNotifier = GameNotifierProvider.of(context).gameNotifier;
 
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        // color: Colors.yellow,
-        border: Border.all(color: Colors.yellow),
-      ),
-      child: ValueListenableBuilder(
-        valueListenable: gameNotifier,
-        builder: (context, game, _) => ValueListenableBuilder(
-          valueListenable: game.firstRevealedMine,
-          builder: (
-            context,
-            firstRevealedMine,
-            _,
-          ) {
-            return FirstRevealedMine(
-              mine: firstRevealedMine,
-              child: GridView.count(
-                shrinkWrap: true,
-                crossAxisCount: game.rows,
-                children: game.cells
-                    .map(
-                      (e) => CellTile(
-                        cell: e,
-                        onCellTap: () => game.tapCell(e),
-                      ),
-                    )
-                    .toList(),
-              ),
-            );
-          },
-        ),
+    return ValueListenableBuilder(
+      valueListenable: gameNotifier,
+      builder: (context, game, _) => ValueListenableBuilder(
+        valueListenable: game.firstRevealedMine,
+        builder: (
+          context,
+          firstRevealedMine,
+          _,
+        ) {
+          return FirstRevealedMine(
+            mine: firstRevealedMine,
+            child: GridView.count(
+              shrinkWrap: true,
+              crossAxisCount: game.rows,
+              children: game.cells
+                  .map(
+                    (e) => CellTile(
+                      cell: e,
+                      onCellTap: () => game.tapCell(e),
+                    ),
+                  )
+                  .toList(),
+            ),
+          );
+        },
       ),
     );
   }

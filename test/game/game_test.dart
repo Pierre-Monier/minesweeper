@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mines_sweeper/extension/list.dart';
 import 'package:mines_sweeper/game/cell.dart';
+import 'package:mines_sweeper/game/config.dart';
 import 'package:mines_sweeper/game/game.dart';
 import 'package:mines_sweeper/game/mine.dart';
 import 'package:mines_sweeper/game/safe.dart';
@@ -23,7 +24,9 @@ void main() {
 
   test('game should generate cells', () {
     const rows = 2;
-    final game = Game(rows: rows);
+    final game = Game(
+      config: const GameConfig(rows: 2, columns: 2, numberOfMines: 2),
+    );
 
     expect(game.cells.length, rows * rows);
     expect(game.cells.whereType<Mine>().length, rows);

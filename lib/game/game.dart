@@ -2,31 +2,24 @@ import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:mines_sweeper/extension/list.dart';
 import 'package:mines_sweeper/game/cell.dart';
+import 'package:mines_sweeper/game/config.dart';
 import 'package:mines_sweeper/game/mine.dart';
 import 'package:mines_sweeper/game/safe.dart';
 import 'package:mines_sweeper/notifier/time_spend_notifier.dart';
 
-// TODO(Pierre): Game should have type (beguiner, intermediate, expert and custom)
-// TODO(Pierre): game can have columns different than rows
-// TODO(Pierre): Number of mine should be different than number of rows
-// TODO(Pierre): game should display number of mine - number of flagged cells
 // TODO(Pierre): flag should happen on right click
 // TODO(Pierre): flagged cell that are not mine should be displayed as wrong when game is lost
 // TODO(pierre): OldSchoolBorder should act a bit differently when tapped
+// TODO(Pierre): Game should keep cell size and overflow nicely
 class Game {
   Game({
-    this.rows = _defaultNumberOfRows,
-  }) : numberOfMines = rows + 1 {
-    final cellsData = _generateCellsData(rows, numberOfMines);
+    GameConfig? config,
+  }) : config = config ?? GameConfig.expert() {
+    final cellsData = _generateCellsData(this.config);
     cells = _generateCellsWithNeighbors(cellsData);
   }
 
-  /// Number of rows in the game. Each row has the same number of cells.
-  final int rows;
-
-  /// Number of mines in the game.
-  /// Default is the same as the number of rows.
-  final int numberOfMines;
+  final GameConfig config;
 
   late final List<Cell> cells;
 
@@ -42,7 +35,15 @@ class Game {
 
   final ValueNotifier<GameMove> gameMove = ValueNotifier(GameMove.reveal);
 
-  static const _defaultNumberOfRows = 9;
+  late final ValueNotifier<int> remainingMines = ValueNotifier(
+    _remainingMines,
+  );
+
+  int get _remainingMines =>
+      config.numberOfMines -
+      cells
+          .where((cell) => cell.displayMode.value == DisplayMode.flagged)
+          .length;
 
   static List<Cell> _generateCellsWithNeighbors(List<List<Cell>> cellsData) {
     for (var y = 0; y < cellsData.length; y += 1) {
@@ -91,17 +92,18 @@ class Game {
     return possibleNeighbors.whereNotNull().toList();
   }
 
-  static List<List<Cell>> _generateCellsData(int rows, int numberOfMines) {
+  static List<List<Cell>> _generateCellsData(GameConfig config) {
     final cellsConfiguration = List.generate(
-      rows * rows,
-      (index) => index < numberOfMines ? Mine() : Safe(),
+      config.rows * config.columns,
+      (index) => index < config.numberOfMines ? Mine() : Safe(),
     );
     cellsConfiguration.shuffle();
 
     final cellsData = <List<Cell>>[];
-    for (var i = 0; i < rows; i += 1) {
-      final startIndex = i * rows;
-      final endIndex = (i + 1) * rows;
+    // TODO(Pierre): fix with expert config
+    for (var i = 0; i < config.rows; i += 1) {
+      final startIndex = i * config.rows;
+      final endIndex = (i + 1) * config.rows;
 
       cellsData.add(cellsConfiguration.sublist(startIndex, endIndex));
     }
@@ -128,6 +130,7 @@ class Game {
         cell.reveal();
       case GameMove.flag:
         cell.toggleFlag();
+        remainingMines.value = _remainingMines;
       case GameMove.question:
         cell.toggleQuestion();
     }
@@ -153,7 +156,8 @@ class Game {
     final revealedSafeCell = cells
         .where((e) => e is Safe && e.displayMode.value == DisplayMode.revealed);
 
-    final hasWin = revealedSafeCell.length == cells.length - numberOfMines;
+    final hasWin =
+        revealedSafeCell.length == cells.length - config.numberOfMines;
 
     if (hasWin) {
       _endGame(GameStatus.win);

@@ -23,12 +23,12 @@ class GameBody extends StatelessWidget {
             mine: firstRevealedMine,
             child: ConstrainedBox(
               constraints: BoxConstraints(
-                maxWidth: CellTile.cellSize * game.numberOfMines.toDouble(),
-                maxHeight: CellTile.cellSize * game.numberOfMines.toDouble(),
+                maxWidth: CellTile.cellSize * game.config.columns,
+                maxHeight: CellTile.cellSize * game.config.rows,
               ),
               child: GridView.count(
                 shrinkWrap: true,
-                crossAxisCount: game.rows,
+                crossAxisCount: game.config.columns,
                 children: game.cells
                     .map(
                       (e) => CellTile(

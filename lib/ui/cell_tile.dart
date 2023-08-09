@@ -145,9 +145,12 @@ class _ToggleCellTile extends StatelessWidget {
 
     return ValueListenableBuilder(
       valueListenable: game.gameMove,
-      builder: (context, gameMove, child) => IconButton(
-        onPressed: onPressed(game, gameMove),
-        icon: icon,
+      builder: (context, gameMove, child) => OldSchoolBorder(
+        isTapEnabled: false,
+        child: IconButton(
+          onPressed: onPressed(game, gameMove),
+          icon: icon,
+        ),
       ),
     );
   }

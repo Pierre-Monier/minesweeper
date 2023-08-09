@@ -15,7 +15,7 @@ class GameBar extends StatelessWidget {
       builder: (context, game, child) => Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(game.rows.toString()),
+          Text(game.numberOfMines.toString()),
           IconButton(
             onPressed: gameNotifier.resetGame,
             icon: const Icon(Icons.restore),

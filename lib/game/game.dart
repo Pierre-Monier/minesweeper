@@ -6,11 +6,18 @@ import 'package:mines_sweeper/game/mine.dart';
 import 'package:mines_sweeper/game/safe.dart';
 import 'package:mines_sweeper/notifier/time_spend_notifier.dart';
 
+// TODO(Pierre): Game should have type (beguiner, intermediate, expert and custom)
+// TODO(Pierre): game can have columns different than rows
+// TODO(Pierre): Number of mine should be different than number of rows
+// TODO(Pierre): game should display number of mine - number of flagged cells
+// TODO(Pierre): flag should happen on right click
+// TODO(Pierre): flagged cell that are not mine should be displayed as wrong when game is lost
+// TODO(pierre): OldSchoolBorder should act a bit differently when tapped
 class Game {
   Game({
     this.rows = _defaultNumberOfRows,
-  }) : numberOfMines = rows {
-    final cellsData = _generateCellsData(rows);
+  }) : numberOfMines = rows + 1 {
+    final cellsData = _generateCellsData(rows, numberOfMines);
     cells = _generateCellsWithNeighbors(cellsData);
   }
 
@@ -35,7 +42,7 @@ class Game {
 
   final ValueNotifier<GameMove> gameMove = ValueNotifier(GameMove.reveal);
 
-  static const _defaultNumberOfRows = 10;
+  static const _defaultNumberOfRows = 9;
 
   static List<Cell> _generateCellsWithNeighbors(List<List<Cell>> cellsData) {
     for (var y = 0; y < cellsData.length; y += 1) {
@@ -84,10 +91,10 @@ class Game {
     return possibleNeighbors.whereNotNull().toList();
   }
 
-  static List<List<Cell>> _generateCellsData(int rows) {
+  static List<List<Cell>> _generateCellsData(int rows, int numberOfMines) {
     final cellsConfiguration = List.generate(
       rows * rows,
-      (index) => index < rows ? Mine() : Safe(),
+      (index) => index < numberOfMines ? Mine() : Safe(),
     );
     cellsConfiguration.shuffle();
 

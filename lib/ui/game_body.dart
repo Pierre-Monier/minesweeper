@@ -21,17 +21,23 @@ class GameBody extends StatelessWidget {
         ) {
           return FirstRevealedMine(
             mine: firstRevealedMine,
-            child: GridView.count(
-              shrinkWrap: true,
-              crossAxisCount: game.rows,
-              children: game.cells
-                  .map(
-                    (e) => CellTile(
-                      cell: e,
-                      onCellTap: () => game.tapCell(e),
-                    ),
-                  )
-                  .toList(),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: CellTile.cellSize * game.numberOfMines.toDouble(),
+                maxHeight: CellTile.cellSize * game.numberOfMines.toDouble(),
+              ),
+              child: GridView.count(
+                shrinkWrap: true,
+                crossAxisCount: game.rows,
+                children: game.cells
+                    .map(
+                      (e) => CellTile(
+                        cell: e,
+                        onCellTap: () => game.tapCell(e),
+                      ),
+                    )
+                    .toList(),
+              ),
             ),
           );
         },

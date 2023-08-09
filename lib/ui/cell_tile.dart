@@ -18,9 +18,13 @@ class CellTile extends StatelessWidget {
   final VoidCallback onCellTap;
   final Cell cell;
 
+  static const cellSize = 20.0 + OldSchoolBorder.borderWidth;
+
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
+    return Container(
+      width: cellSize,
+      height: cellSize,
       decoration: BoxDecoration(
         border: Border.all(color: GameColor.cellBorderColor, width: 0.5),
       ),

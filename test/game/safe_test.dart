@@ -25,7 +25,6 @@ void main() {
     );
 
     safe.neighbors.first.toggleFlag();
-    safe.neighbors.last.toggleQuestion();
     safe.reveal();
 
     expect(

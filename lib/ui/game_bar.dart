@@ -30,12 +30,6 @@ class GameBar extends StatelessWidget {
             onPressed: game.toggleFlag,
             icon: const Icon(Icons.flag),
           ),
-          GameMoveButton(
-            gameMove: game.gameMove,
-            activeGameMove: GameMove.question,
-            onPressed: game.toggleQuestion,
-            icon: const Icon(Icons.question_mark),
-          ),
           ListenableBuilder(
             listenable: game.timeSpend,
             builder: (context, child) => Text(

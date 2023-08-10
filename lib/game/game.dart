@@ -48,7 +48,7 @@ class Game {
   static List<Cell> _generateCellsWithNeighbors(List<List<Cell>> cellsData) {
     for (var y = 0; y < cellsData.length; y += 1) {
       for (var x = 0; x < cellsData[y].length; x += 1) {
-        final cell = cellsData[x][y];
+        final cell = cellsData[y][x];
         cell.neighbors.addAll(
           _getCellNeighbors(position: (x: x, y: y), cellsData: cellsData),
         );
@@ -64,29 +64,29 @@ class Game {
   }) {
     final possibleNeighbors = [
       cellsData
-          .safeElementAtOrNull(position.x - 1)
-          ?.safeElementAtOrNull(position.y - 1),
+          .safeElementAtOrNull(position.y - 1)
+          ?.safeElementAtOrNull(position.x - 1),
       cellsData
-          .safeElementAtOrNull(position.x)
-          ?.safeElementAtOrNull(position.y - 1),
+          .safeElementAtOrNull(position.y)
+          ?.safeElementAtOrNull(position.x - 1),
       cellsData
-          .safeElementAtOrNull(position.x + 1)
-          ?.safeElementAtOrNull(position.y - 1),
+          .safeElementAtOrNull(position.y + 1)
+          ?.safeElementAtOrNull(position.x - 1),
       cellsData
-          .safeElementAtOrNull(position.x - 1)
-          ?.safeElementAtOrNull(position.y),
+          .safeElementAtOrNull(position.y - 1)
+          ?.safeElementAtOrNull(position.x),
       cellsData
-          .safeElementAtOrNull(position.x + 1)
-          ?.safeElementAtOrNull(position.y),
+          .safeElementAtOrNull(position.y + 1)
+          ?.safeElementAtOrNull(position.x),
       cellsData
-          .safeElementAtOrNull(position.x - 1)
-          ?.safeElementAtOrNull(position.y + 1),
+          .safeElementAtOrNull(position.y - 1)
+          ?.safeElementAtOrNull(position.x + 1),
       cellsData
-          .safeElementAtOrNull(position.x)
-          ?.safeElementAtOrNull(position.y + 1),
+          .safeElementAtOrNull(position.y)
+          ?.safeElementAtOrNull(position.x + 1),
       cellsData
-          .safeElementAtOrNull(position.x + 1)
-          ?.safeElementAtOrNull(position.y + 1),
+          .safeElementAtOrNull(position.y + 1)
+          ?.safeElementAtOrNull(position.x + 1),
     ];
 
     return possibleNeighbors.whereNotNull().toList();
@@ -102,8 +102,8 @@ class Game {
     final cellsData = <List<Cell>>[];
     // TODO(Pierre): fix with expert config
     for (var i = 0; i < config.rows; i += 1) {
-      final startIndex = i * config.rows;
-      final endIndex = (i + 1) * config.rows;
+      final startIndex = i * config.columns;
+      final endIndex = (i + 1) * config.columns;
 
       cellsData.add(cellsConfiguration.sublist(startIndex, endIndex));
     }
@@ -131,8 +131,6 @@ class Game {
       case GameMove.flag:
         cell.toggleFlag();
         remainingMines.value = _remainingMines;
-      case GameMove.question:
-        cell.toggleQuestion();
     }
   }
 
@@ -197,15 +195,9 @@ class Game {
         gameMove.value == GameMove.flag ? GameMove.reveal : GameMove.flag;
   }
 
-  void toggleQuestion() {
-    gameMove.value = gameMove.value == GameMove.question
-        ? GameMove.reveal
-        : GameMove.question;
-  }
-
   bool get _isGameEnd => gameStatus.value != GameStatus.onGoing;
 }
 
 enum GameStatus { onGoing, loose, win }
 
-enum GameMove { reveal, flag, question }
+enum GameMove { reveal, flag }

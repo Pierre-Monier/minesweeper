@@ -1,9 +1,12 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:mines_sweeper/game/cell.dart';
 import 'package:mines_sweeper/game/game.dart';
 import 'package:mines_sweeper/game/mine.dart';
 import 'package:mines_sweeper/notifier/first_revealed_mine.dart';
 import 'package:mines_sweeper/notifier/game.notifier.dart';
+import 'package:mines_sweeper/ui/draw/flag_draw.dart';
+import 'package:mines_sweeper/ui/draw/mine_draw.dart';
 import 'package:mines_sweeper/ui/old_school_border.dart';
 import 'package:mines_sweeper/ui/theme/color.dart';
 import 'package:mines_sweeper/ui/theme/typographie.dart';
@@ -15,7 +18,7 @@ class CellTile extends StatelessWidget {
     super.key,
   });
 
-  final VoidCallback onCellTap;
+  final VoidCallback? onCellTap;
   final Cell cell;
 
   static const cellSize = 20.0 + OldSchoolBorder.borderWidth;
@@ -52,11 +55,12 @@ class CellTile extends StatelessWidget {
 class _HiddenCellTile extends StatelessWidget {
   const _HiddenCellTile({required this.onCellTap});
 
-  final VoidCallback onCellTap;
+  final VoidCallback? onCellTap;
 
   @override
   Widget build(BuildContext context) {
     return OldSchoolBorder(
+      isTapEnabled: onCellTap != null,
       child: InkWell(
         onTap: onCellTap,
         child: const SizedBox.shrink(),
@@ -81,16 +85,24 @@ class _RevealCellTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final firstRevealedMine = FirstRevealedMine.of(context).mine;
 
-    return Center(
-      child: ColoredBox(
-        color: cell == firstRevealedMine ? Colors.red : Colors.transparent,
-        child: Text(
-          cell is Mine ? 'X' : _minesAroundText,
-          textAlign: TextAlign.center,
-          style: GameTypographie.cellTextStyle.copyWith(
-            color: _minesAroundTextColor,
-          ),
-        ),
+    final content = cell is Mine
+        ? const SizedBox(
+            width: CellTile.cellSize,
+            height: CellTile.cellSize,
+            child: MineDraw(),
+          )
+        : AutoSizeText(
+            _minesAroundText,
+            textAlign: TextAlign.center,
+            style: GameTypographie.cellTextStyle.copyWith(
+              color: _minesAroundTextColor,
+            ),
+          );
+
+    return ColoredBox(
+      color: cell == firstRevealedMine ? Colors.red : Colors.transparent,
+      child: Align(
+        child: content,
       ),
     );
   }
@@ -105,7 +117,7 @@ class _FlagCellTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return _ToggleCellTile(
       cell: cell,
-      icon: const Icon(Icons.flag),
+      icon: const FlagDraw(),
       onPressed: (game, gameMove) =>
           gameMove == GameMove.flag ? () => game.tapCell(cell) : null,
     );
@@ -133,9 +145,9 @@ class _ToggleCellTile extends StatelessWidget {
       valueListenable: game.gameMove,
       builder: (context, gameMove, child) => OldSchoolBorder(
         isTapEnabled: false,
-        child: IconButton(
-          onPressed: onPressed(game, gameMove),
-          icon: icon,
+        child: GestureDetector(
+          onTap: () => onPressed(game, gameMove),
+          child: icon,
         ),
       ),
     );

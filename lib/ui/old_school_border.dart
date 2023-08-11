@@ -6,11 +6,13 @@ class OldSchoolBorder extends StatefulWidget {
   const OldSchoolBorder({
     required this.child,
     this.isTapEnabled = true,
+    this.shouldShowBorder = true,
     super.key,
   });
 
   final Widget child;
   final bool isTapEnabled;
+  final bool shouldShowBorder;
 
   static const borderWidth = 3.0;
 
@@ -19,7 +21,15 @@ class OldSchoolBorder extends StatefulWidget {
 }
 
 class _OldSchoolBorderState extends State<OldSchoolBorder> {
-  var _shouldShowBorder = true;
+  late var _shouldShowBorder = widget.shouldShowBorder;
+
+  @override
+  void didUpdateWidget(covariant OldSchoolBorder oldWidget) {
+    setState(() {
+      _shouldShowBorder = widget.shouldShowBorder;
+    });
+    super.didUpdateWidget(oldWidget);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -89,37 +99,42 @@ class _OldSchoolBorderRenderObject extends RenderProxyBox {
   void paint(PaintingContext context, Offset offset) {
     context.paintChild(child!, offset);
 
-    if (!shouldShowBorder) return;
+    final maxWidth = size.width + offset.dx;
+    final maxHeight = size.height + offset.dy;
 
-    final whitePath = Path()
-      ..moveTo(child!.size.width, offset.dy)
+    final upPath = Path()
+      ..moveTo(maxWidth, offset.dy)
       ..lineTo(offset.dx, offset.dy)
-      ..lineTo(offset.dx, size.height)
-      ..lineTo(offset.dx + _borderWidth, size.height - _borderWidth)
+      ..lineTo(offset.dx, maxHeight)
+      ..lineTo(offset.dx + _borderWidth, maxHeight - _borderWidth)
       ..lineTo(offset.dx + _borderWidth, offset.dy + _borderWidth)
-      ..lineTo(child!.size.width - _borderWidth, offset.dy + _borderWidth)
-      ..lineTo(child!.size.width, offset.dy)
+      ..lineTo(maxWidth - _borderWidth, offset.dy + _borderWidth)
+      ..lineTo(maxWidth, offset.dy)
       ..close();
 
     context.canvas.drawPath(
-      whitePath,
+      upPath,
       Paint()
-        ..color = GameColor.oldSchoolBorder.lightColor
+        ..color = shouldShowBorder
+            ? GameColor.oldSchoolBorder.lightColor
+            : GameColor.oldSchoolBorder.darkColor
         ..strokeWidth = _borderWidth,
     );
 
-    final blackPath = Path()
-      ..moveTo(child!.size.width, offset.dy)
-      ..lineTo(child!.size.width, size.height)
-      ..lineTo(offset.dx, size.height)
-      ..lineTo(offset.dx + _borderWidth, size.height - _borderWidth)
-      ..lineTo(child!.size.width - _borderWidth, size.height - _borderWidth)
-      ..lineTo(child!.size.width - _borderWidth, offset.dy + _borderWidth)
-      ..lineTo(child!.size.width, offset.dy)
+    if (!shouldShowBorder) return;
+
+    final downPath = Path()
+      ..moveTo(maxWidth, offset.dy)
+      ..lineTo(maxWidth, maxHeight)
+      ..lineTo(offset.dx, maxHeight)
+      ..lineTo(offset.dx + _borderWidth, maxHeight - _borderWidth)
+      ..lineTo(maxWidth - _borderWidth, maxHeight - _borderWidth)
+      ..lineTo(maxWidth - _borderWidth, offset.dy + _borderWidth)
+      ..lineTo(maxWidth, offset.dy)
       ..close();
 
     context.canvas.drawPath(
-      blackPath,
+      downPath,
       Paint()
         ..color = GameColor.oldSchoolBorder.darkColor
         ..strokeWidth = _borderWidth,

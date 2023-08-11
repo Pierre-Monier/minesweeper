@@ -7,10 +7,11 @@ import 'package:mines_sweeper/game/mine.dart';
 import 'package:mines_sweeper/game/safe.dart';
 import 'package:mines_sweeper/notifier/time_spend_notifier.dart';
 
-// TODO(Pierre): flag should happen on right click
 // TODO(Pierre): flagged cell that are not mine should be displayed as wrong when game is lost
-// TODO(pierre): OldSchoolBorder should act a bit differently when tapped
-// TODO(Pierre): Game should keep cell size and overflow nicely
+// TODO(Pierre): Game should be zoomable
+// TODO(Pierre): Game should change reset face button when cell is tap down (also game lost and win)
+// TODO(Pierre): draw nice led counter
+// TODO(Pierre): draw every draw
 class Game {
   Game({
     GameConfig? config,
@@ -100,7 +101,6 @@ class Game {
     cellsConfiguration.shuffle();
 
     final cellsData = <List<Cell>>[];
-    // TODO(Pierre): fix with expert config
     for (var i = 0; i < config.rows; i += 1) {
       final startIndex = i * config.columns;
       final endIndex = (i + 1) * config.columns;

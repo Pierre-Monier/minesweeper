@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mines_sweeper/game/game.dart';
 import 'package:mines_sweeper/notifier/first_revealed_mine.dart';
 import 'package:mines_sweeper/notifier/game.notifier.dart';
 import 'package:mines_sweeper/ui/cell_tile.dart';
@@ -26,17 +27,22 @@ class GameBody extends StatelessWidget {
                 maxWidth: CellTile.cellSize * game.config.columns,
                 maxHeight: CellTile.cellSize * game.config.rows,
               ),
-              child: GridView.count(
-                shrinkWrap: true,
-                crossAxisCount: game.config.columns,
-                children: game.cells
-                    .map(
-                      (e) => CellTile(
-                        cell: e,
-                        onCellTap: () => game.tapCell(e),
-                      ),
-                    )
-                    .toList(),
+              child: ValueListenableBuilder(
+                valueListenable: game.gameStatus,
+                builder: (context, gameStatus, child) => GridView.count(
+                  shrinkWrap: true,
+                  crossAxisCount: game.config.columns,
+                  children: game.cells
+                      .map(
+                        (e) => CellTile(
+                          cell: e,
+                          onCellTap: gameStatus == GameStatus.onGoing
+                              ? () => game.tapCell(e)
+                              : null,
+                        ),
+                      )
+                      .toList(),
+                ),
               ),
             ),
           );

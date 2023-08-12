@@ -7,12 +7,14 @@ class OldSchoolBorder extends StatefulWidget {
     required this.child,
     this.isTapEnabled = true,
     this.shouldShowBorder = true,
+    this.isReversed = false,
     super.key,
   });
 
   final Widget child;
   final bool isTapEnabled;
   final bool shouldShowBorder;
+  final bool isReversed;
 
   static const borderWidth = 3.0;
 
@@ -51,19 +53,28 @@ class _OldSchoolBorderState extends State<OldSchoolBorder> {
 
     return _OldSchoolBorder(
       shouldShowBorder: _shouldShowBorder,
+      isReversed: widget.isReversed,
       child: child,
     );
   }
 }
 
 class _OldSchoolBorder extends SingleChildRenderObjectWidget {
-  const _OldSchoolBorder({required super.child, this.shouldShowBorder = true});
+  const _OldSchoolBorder({
+    required super.child,
+    required this.shouldShowBorder,
+    required this.isReversed,
+  });
 
   final bool shouldShowBorder;
+  final bool isReversed;
 
   @override
   _OldSchoolBorderRenderObject createRenderObject(BuildContext context) {
-    return _OldSchoolBorderRenderObject(shouldShowBorder: shouldShowBorder);
+    return _OldSchoolBorderRenderObject(
+      shouldShowBorder: shouldShowBorder,
+      isReversed: isReversed,
+    );
   }
 
   @override
@@ -72,18 +83,30 @@ class _OldSchoolBorder extends SingleChildRenderObjectWidget {
     covariant _OldSchoolBorderRenderObject renderObject,
   ) {
     renderObject.shouldShowBorder = shouldShowBorder;
+    renderObject.shouldShowBorder = shouldShowBorder;
   }
 }
 
 class _OldSchoolBorderRenderObject extends RenderProxyBox {
-  _OldSchoolBorderRenderObject({required bool shouldShowBorder})
-      : _shouldShowBorder = shouldShowBorder;
+  _OldSchoolBorderRenderObject({
+    required bool shouldShowBorder,
+    required bool isReversed,
+  })  : _shouldShowBorder = shouldShowBorder,
+        _isReversed = isReversed;
 
   bool _shouldShowBorder;
   bool get shouldShowBorder => _shouldShowBorder;
   set shouldShowBorder(bool value) {
     if (value == _shouldShowBorder) return;
     _shouldShowBorder = value;
+    markNeedsPaint();
+  }
+
+  bool _isReversed;
+  bool get isReversed => _isReversed;
+  set isReversed(bool value) {
+    if (value == _isReversed) return;
+    _isReversed = value;
     markNeedsPaint();
   }
 
@@ -115,9 +138,7 @@ class _OldSchoolBorderRenderObject extends RenderProxyBox {
     context.canvas.drawPath(
       upPath,
       Paint()
-        ..color = shouldShowBorder
-            ? GameColor.oldSchoolBorder.lightColor
-            : GameColor.oldSchoolBorder.darkColor
+        ..color = _upColor
         ..strokeWidth = _borderWidth,
     );
 
@@ -136,8 +157,16 @@ class _OldSchoolBorderRenderObject extends RenderProxyBox {
     context.canvas.drawPath(
       downPath,
       Paint()
-        ..color = GameColor.oldSchoolBorder.darkColor
+        ..color = _downColor
         ..strokeWidth = _borderWidth,
     );
   }
+
+  Color get _upColor => shouldShowBorder && !isReversed
+      ? GameColor.oldSchoolBorder.lightColor
+      : GameColor.oldSchoolBorder.darkColor;
+
+  Color get _downColor => !isReversed
+      ? GameColor.oldSchoolBorder.darkColor
+      : GameColor.oldSchoolBorder.lightColor;
 }

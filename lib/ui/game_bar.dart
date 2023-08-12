@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mines_sweeper/notifier/game.notifier.dart';
+import 'package:mines_sweeper/notifier/game_notifier.dart';
 import 'package:mines_sweeper/ui/draw/face_draw.dart';
 import 'package:mines_sweeper/ui/game_bar_button.dart';
 

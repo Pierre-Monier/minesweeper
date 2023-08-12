@@ -10,7 +10,6 @@ import 'package:mines_sweeper/notifier/time_spend_notifier.dart';
 // TODO(Pierre): Game should change reset face button when cell is tap down (also game lost and win)
 // TODO(Pierre): draw nice led counter
 // TODO(Pierre): draw every draw
-// TODO(Pierre): GridView should keep its size
 // TODO(Pierre): handle toggle flag differently
 class Game {
   Game({
@@ -22,10 +21,14 @@ class Game {
 
   final GameConfig config;
 
-  late final List<Cell> cells;
+  late final List<List<Cell>> cells;
+
+  @visibleForTesting
+  List<Cell> get everyCells =>
+      cells.reduce((value, element) => [...value, ...element]);
 
   /// Start when first cell is tap
-  final TimeSpendNotifier timeSpend = TimeSpendNotifier(Duration.zero);
+  final TimeSpendNotifier timeSpend = TimeSpendNotifier();
 
   /// Is not null when the game is lost
   final ValueNotifier<GameStatus> gameStatus =
@@ -42,11 +45,13 @@ class Game {
 
   int get _remainingMines =>
       config.numberOfMines -
-      cells
+      everyCells
           .where((cell) => cell.displayMode.value == DisplayMode.flagged)
           .length;
 
-  static List<Cell> _generateCellsWithNeighbors(List<List<Cell>> cellsData) {
+  static List<List<Cell>> _generateCellsWithNeighbors(
+    List<List<Cell>> cellsData,
+  ) {
     for (var y = 0; y < cellsData.length; y += 1) {
       for (var x = 0; x < cellsData[y].length; x += 1) {
         final cell = cellsData[y][x];
@@ -56,7 +61,7 @@ class Game {
       }
     }
 
-    return cellsData.reduce((value, element) => [...value, ...element]);
+    return cellsData;
   }
 
   static List<Cell> _getCellNeighbors({
@@ -151,7 +156,7 @@ class Game {
   }
 
   void _handleGameWin() {
-    final revealedSafeCell = cells
+    final revealedSafeCell = everyCells
         .where((e) => e is Safe && e.displayMode.value == DisplayMode.revealed);
 
     final hasWin =
@@ -163,7 +168,7 @@ class Game {
   }
 
   void _handleGameFailure() {
-    final revealedMine = cells.firstWhereOrNull(
+    final revealedMine = everyCells.firstWhereOrNull(
       (e) => e is Mine && e.displayMode.value == DisplayMode.revealed,
     );
 
@@ -173,7 +178,7 @@ class Game {
     firstRevealedMine.value = revealedMine;
 
     final everyNonRevealedMine =
-        cells.where((e) => e is Mine && e != firstRevealedMine.value);
+        everyCells.where((e) => e is Mine && e != firstRevealedMine.value);
 
     for (final mine in everyNonRevealedMine) {
       mine.reveal();

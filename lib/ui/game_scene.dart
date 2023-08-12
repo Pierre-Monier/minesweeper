@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:mines_sweeper/notifier/game.notifier.dart';
+import 'package:mines_sweeper/notifier/game_notifier.dart';
 import 'package:mines_sweeper/ui/game_bar.dart';
 import 'package:mines_sweeper/ui/game_body.dart';
 import 'package:mines_sweeper/ui/old_school_border.dart';
@@ -27,10 +27,14 @@ class _GameSceneState extends State<GameScene> {
     final bodyRenderBox =
         _bodyKey.currentContext?.findRenderObject() as RenderBox?;
 
-    if (bodyRenderBox == null || bodyRenderBox.hasSize == false) return;
+    if (bodyRenderBox == null || !bodyRenderBox.hasSize) return;
+
+    final newWidth = bodyRenderBox.size.width;
+
+    if (newWidth == _gameBarWidth) return;
 
     setState(() {
-      _gameBarWidth = bodyRenderBox.size.width;
+      _gameBarWidth = newWidth;
     });
   }
 
@@ -46,17 +50,22 @@ class _GameSceneState extends State<GameScene> {
         );
 
         return OldSchoolBorder(
+          isTapEnabled: false,
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
-                OldSchoolBorder(
-                  isReversed: true,
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      maxWidth: _gameBarWidth ?? double.infinity,
+                IntrinsicWidth(
+                  child: OldSchoolBorder(
+                    isReversed: true,
+                    isTapEnabled: false,
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        maxWidth: _gameBarWidth ?? double.infinity,
+                        minWidth: _gameBarWidth ?? 0.0,
+                      ),
+                      child: const GameBar(),
                     ),
-                    child: const GameBar(),
                   ),
                 ),
                 const SizedBox(
@@ -64,6 +73,7 @@ class _GameSceneState extends State<GameScene> {
                 ),
                 OldSchoolBorder(
                   isReversed: true,
+                  isTapEnabled: false,
                   child: GameBody(
                     key: _bodyKey,
                   ),

@@ -5,7 +5,7 @@ import 'package:mines_sweeper/game/game.dart';
 import 'package:mines_sweeper/game/mine.dart';
 import 'package:mines_sweeper/game/safe.dart';
 import 'package:mines_sweeper/notifier/first_revealed_mine.dart';
-import 'package:mines_sweeper/notifier/game.notifier.dart';
+import 'package:mines_sweeper/notifier/game_notifier.dart';
 import 'package:mines_sweeper/ui/draw/flag_draw.dart';
 import 'package:mines_sweeper/ui/draw/mine_draw.dart';
 import 'package:mines_sweeper/ui/old_school_border.dart';

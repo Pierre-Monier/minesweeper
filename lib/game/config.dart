@@ -11,23 +11,15 @@ sealed class GameConfig {
 }
 
 class BeginnerConfig extends GameConfig {
-  BeginnerConfig({super.rows = 9, super.columns = 9, super.numberOfMines = 10});
+  BeginnerConfig() : super(rows: 9, columns: 9, numberOfMines: 10);
 }
 
 class IntermediateConfig extends GameConfig {
-  IntermediateConfig({
-    super.rows = 16,
-    super.columns = 16,
-    super.numberOfMines = 40,
-  });
+  IntermediateConfig() : super(rows: 16, columns: 16, numberOfMines: 40);
 }
 
 class ExpertConfig extends GameConfig {
-  ExpertConfig({
-    super.rows = 16,
-    super.columns = 30,
-    super.numberOfMines = 99,
-  });
+  ExpertConfig() : super(rows: 16, columns: 30, numberOfMines: 99);
 }
 
 class CustomConfig extends GameConfig {

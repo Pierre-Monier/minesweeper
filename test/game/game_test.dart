@@ -9,31 +9,31 @@ import 'package:mines_sweeper/game/safe.dart';
 void main() {
   void revealFirstCell<T extends Cell>(Game game) {
     game.tapCell(
-      game.cells.firstWhere(
+      game.everyCells.firstWhere(
         (e) => e is T && e.displayMode.value != DisplayMode.revealed,
       ),
     );
   }
 
   void revealEveryCell<T extends Cell>(Game game) {
-    for (final cell in game.cells
+    for (final cell in game.everyCells
         .where((e) => e is T && e.displayMode.value != DisplayMode.revealed)) {
       game.tapCell(cell);
     }
   }
 
-  test('game should generate cells', () {
+  test('game should generate everyCells', () {
     const rows = 2;
     final game = Game(
       config: CustomConfig(rows: 2, columns: 2, numberOfMines: 2),
     );
 
-    expect(game.cells.length, rows * rows);
-    expect(game.cells.whereType<Mine>().length, rows);
+    expect(game.everyCells.length, rows * rows);
+    expect(game.everyCells.whereType<Mine>().length, rows);
     expect(
-      game.cells.every(
+      game.everyCells.every(
         (e) => e.neighbors
-            .containsAll(game.cells.where((element) => element != e)),
+            .containsAll(game.everyCells.where((element) => element != e)),
       ),
       isTrue,
     );
@@ -65,7 +65,7 @@ void main() {
     expect(game.gameStatus.value, GameStatus.loose);
     expect(game.firstRevealedMine.value, isNotNull);
     expect(
-      game.cells.where(
+      game.everyCells.where(
         (e) => e is Mine && e.displayMode.value != DisplayMode.revealed,
       ),
       isEmpty,

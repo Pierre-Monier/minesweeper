@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mines_sweeper/game/config.dart';
-import 'package:mines_sweeper/notifier/game.notifier.dart';
+import 'package:mines_sweeper/notifier/game_notifier.dart';
 import 'package:mines_sweeper/ui/theme/typographie.dart';
 
 class GameSelector extends StatelessWidget {

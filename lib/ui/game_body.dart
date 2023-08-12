@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mines_sweeper/game/game.dart';
 import 'package:mines_sweeper/notifier/first_revealed_mine.dart';
-import 'package:mines_sweeper/notifier/game.notifier.dart';
+import 'package:mines_sweeper/notifier/game_notifier.dart';
 import 'package:mines_sweeper/ui/cell_tile.dart';
 
 class GameBody extends StatelessWidget {
@@ -27,25 +27,41 @@ class GameBody extends StatelessWidget {
                 maxWidth: CellTile.cellSize * game.config.columns,
                 maxHeight: CellTile.cellSize * game.config.rows,
               ),
-              child: ValueListenableBuilder(
-                valueListenable: game.gameStatus,
-                builder: (context, gameStatus, child) => GridView.count(
-                  crossAxisCount: game.config.columns,
-                  children: game.cells
-                      .map(
-                        (e) => CellTile(
-                          cell: e,
-                          onCellTap: gameStatus == GameStatus.onGoing
-                              ? () => game.tapCell(e)
-                              : null,
-                        ),
-                      )
-                      .toList(),
-                ),
-              ),
+              child: _GameCellsGrid(game: game),
             ),
           );
         },
+      ),
+    );
+  }
+}
+
+class _GameCellsGrid extends StatelessWidget {
+  const _GameCellsGrid({required this.game});
+
+  final Game game;
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder(
+      valueListenable: game.gameStatus,
+      builder: (context, gameStatus, child) => Column(
+        children: game.cells
+            .map(
+              (e) => Row(
+                children: e
+                    .map(
+                      (e) => CellTile(
+                        cell: e,
+                        onCellTap: gameStatus == GameStatus.onGoing
+                            ? () => game.tapCell(e)
+                            : null,
+                      ),
+                    )
+                    .toList(),
+              ),
+            )
+            .toList(),
       ),
     );
   }

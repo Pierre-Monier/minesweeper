@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 
 class TimeSpendNotifier extends ValueNotifier<Duration> {
-  TimeSpendNotifier(super.value);
+  TimeSpendNotifier() : super(Duration.zero);
 
   Timer? _timer;
 

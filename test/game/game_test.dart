@@ -25,7 +25,7 @@ void main() {
   test('game should generate cells', () {
     const rows = 2;
     final game = Game(
-      config: const GameConfig(rows: 2, columns: 2, numberOfMines: 2),
+      config: CustomConfig(rows: 2, columns: 2, numberOfMines: 2),
     );
 
     expect(game.cells.length, rows * rows);

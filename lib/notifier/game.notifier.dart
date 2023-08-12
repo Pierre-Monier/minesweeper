@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:mines_sweeper/game/config.dart';
 import 'package:mines_sweeper/game/game.dart';
 
 class GameNotifier extends ValueNotifier<Game> {
@@ -6,6 +7,10 @@ class GameNotifier extends ValueNotifier<Game> {
 
   void resetGame() {
     value = Game();
+  }
+
+  void updateConfig(GameConfig newConfig) {
+    value = Game(config: newConfig);
   }
 }
 

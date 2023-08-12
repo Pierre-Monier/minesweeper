@@ -5,6 +5,10 @@ class GameTypographie {
 
   static const TextStyle cellTextStyle = TextStyle(
     fontSize: 16,
-    fontFamily: 'MineSweeper',
+  );
+
+  static const TextStyle gameSelectorStyle = TextStyle(
+    fontSize: 10,
+    color: Colors.black,
   );
 }

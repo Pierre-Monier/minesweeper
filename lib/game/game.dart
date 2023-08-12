@@ -12,12 +12,11 @@ import 'package:mines_sweeper/notifier/time_spend_notifier.dart';
 // TODO(Pierre): draw nice led counter
 // TODO(Pierre): draw every draw
 // TODO(Pierre): game should have correct border
-// TODO(Pierre): Game can change configuration
 // TODO(Pierre): GridView should keep its size
 class Game {
   Game({
     GameConfig? config,
-  }) : config = config ?? GameConfig.expert() {
+  }) : config = config ?? BeginnerConfig() {
     final cellsData = _generateCellsData(this.config);
     cells = _generateCellsWithNeighbors(cellsData);
   }

@@ -10,24 +10,42 @@ class GamePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: GameColor.background,
-      body: InteractiveViewer(
-        minScale: 1.0,
-        constrained: false,
-        panAxis: PanAxis.aligned,
-        child: Center(
-          child: SizedBox(
-            height: MediaQuery.sizeOf(context).height,
-            child: const Column(
-              children: [
-                Flexible(child: GameSelector()),
-                SizedBox(
-                  height: 16,
-                ),
-                GameScene()
-              ],
+      body: _BothDirectionScrollView(
+        child: Align(
+          alignment: Alignment.topCenter,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minWidth: MediaQuery.sizeOf(context).width,
+            ),
+            child: const IntrinsicHeight(
+              child: Column(
+                children: [
+                  Flexible(child: GameSelector()),
+                  SizedBox(
+                    height: 16,
+                  ),
+                  GameScene()
+                ],
+              ),
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _BothDirectionScrollView extends StatelessWidget {
+  const _BothDirectionScrollView({required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: child,
       ),
     );
   }

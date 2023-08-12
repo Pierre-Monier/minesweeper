@@ -11,7 +11,7 @@ class GamePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return GameNotifierProvider(
       child: Scaffold(
-        backgroundColor: GameColor.backgroundColor,
+        backgroundColor: GameColor.background,
         body: InteractiveViewer(
           minScale: 1.0,
           child: const Center(

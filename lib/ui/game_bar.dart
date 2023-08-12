@@ -23,8 +23,6 @@ class GameBar extends StatelessWidget {
             ),
             const Spacer(),
             GameBarButton(
-              // the button is never active
-              active: false,
               onPressed: gameNotifier.resetGame,
               icon: const FaceDraw(),
             ),

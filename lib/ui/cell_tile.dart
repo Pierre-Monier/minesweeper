@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mines_sweeper/game/cell.dart';
 import 'package:mines_sweeper/game/game.dart';
 import 'package:mines_sweeper/game/mine.dart';
+import 'package:mines_sweeper/game/safe.dart';
 import 'package:mines_sweeper/notifier/first_revealed_mine.dart';
 import 'package:mines_sweeper/notifier/game.notifier.dart';
 import 'package:mines_sweeper/ui/draw/flag_draw.dart';
@@ -29,7 +30,7 @@ class CellTile extends StatelessWidget {
       width: cellSize,
       height: cellSize,
       decoration: BoxDecoration(
-        border: Border.all(color: GameColor.cellBorderColor, width: 0.5),
+        border: Border.all(color: GameColor.cellBorder, width: 0.5),
       ),
       child: ValueListenableBuilder(
         valueListenable: cell.displayMode,
@@ -37,6 +38,7 @@ class CellTile extends StatelessWidget {
           switch (value) {
             case DisplayMode.hidden:
               return _HiddenCellTile(
+                cell: cell,
                 onCellTap: onCellTap,
               );
             case DisplayMode.revealed:
@@ -53,17 +55,35 @@ class CellTile extends StatelessWidget {
 }
 
 class _HiddenCellTile extends StatelessWidget {
-  const _HiddenCellTile({required this.onCellTap});
+  const _HiddenCellTile({required this.onCellTap, required this.cell});
 
+  final Cell cell;
   final VoidCallback? onCellTap;
+
+  Color _getBackgroundColor(GameStatus gameStatus) {
+    if (gameStatus != GameStatus.loose) return Colors.transparent;
+
+    final isWrongFlag =
+        cell is Safe && cell.displayMode.value == DisplayMode.flagged;
+
+    return isWrongFlag ? GameColor.wrongFlag : Colors.transparent;
+  }
 
   @override
   Widget build(BuildContext context) {
+    final game = GameNotifierProvider.of(context).gameNotifier.value;
+
     return OldSchoolBorder(
       isTapEnabled: onCellTap != null,
-      child: InkWell(
-        onTap: onCellTap,
-        child: const SizedBox.shrink(),
+      child: ValueListenableBuilder(
+        valueListenable: game.gameStatus,
+        builder: (context, gameStatus, child) => ColoredBox(
+          color: _getBackgroundColor(gameStatus),
+          child: InkWell(
+            onTap: onCellTap,
+            child: const SizedBox.shrink(),
+          ),
+        ),
       ),
     );
   }
@@ -77,9 +97,8 @@ class _RevealCellTile extends StatelessWidget {
   String get _minesAroundText =>
       cell.minesAround > 0 ? cell.minesAround.toString() : '';
 
-  Color? get _minesAroundTextColor => cell.minesAround > 0
-      ? GameColor.minesAroundColor[cell.minesAround - 1]
-      : null;
+  Color? get _minesAroundTextColor =>
+      cell.minesAround > 0 ? GameColor.minesAround[cell.minesAround - 1] : null;
 
   @override
   Widget build(BuildContext context) {

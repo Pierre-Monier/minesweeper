@@ -8,10 +8,12 @@ import 'package:mines_sweeper/game/safe.dart';
 import 'package:mines_sweeper/notifier/time_spend_notifier.dart';
 
 // TODO(Pierre): flagged cell that are not mine should be displayed as wrong when game is lost
-// TODO(Pierre): Game should be zoomable
 // TODO(Pierre): Game should change reset face button when cell is tap down (also game lost and win)
 // TODO(Pierre): draw nice led counter
 // TODO(Pierre): draw every draw
+// TODO(Pierre): game should have correct border
+// TODO(Pierre): Game can change configuration
+// TODO(Pierre): GridView should keep its size
 class Game {
   Game({
     GameConfig? config,

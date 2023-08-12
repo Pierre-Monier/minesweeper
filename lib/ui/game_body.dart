@@ -30,7 +30,6 @@ class GameBody extends StatelessWidget {
               child: ValueListenableBuilder(
                 valueListenable: game.gameStatus,
                 builder: (context, gameStatus, child) => GridView.count(
-                  shrinkWrap: true,
                   crossAxisCount: game.config.columns,
                   children: game.cells
                       .map(

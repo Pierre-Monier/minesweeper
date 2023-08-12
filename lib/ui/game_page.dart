@@ -10,16 +10,19 @@ class GamePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GameNotifierProvider(
-      child: const Scaffold(
+      child: Scaffold(
         backgroundColor: GameColor.backgroundColor,
-        body: Column(
-          children: [
-            GameBar(),
-            SizedBox(
-              height: 16,
-            ),
-            GameBody()
-          ],
+        body: InteractiveViewer(
+          minScale: 1.0,
+          child: const Column(
+            children: [
+              GameBar(),
+              SizedBox(
+                height: 16,
+              ),
+              GameBody()
+            ],
+          ),
         ),
       ),
     );

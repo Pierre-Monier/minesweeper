@@ -9,6 +9,10 @@ class GameColor {
 
   static const firstRevealedMine = Colors.red;
 
+  static const lcdCounterOn = firstRevealedMine;
+
+  static final lcdCounterOff = Colors.grey.shade900;
+
   static final wrongFlag = firstRevealedMine.shade300;
 
   static const ({Color lightColor, Color darkColor}) oldSchoolBorder =

@@ -10,6 +10,7 @@ import 'package:mines_sweeper/ui/draw/flag_draw.dart';
 import 'package:mines_sweeper/ui/draw/mine_draw.dart';
 import 'package:mines_sweeper/ui/old_school_border.dart';
 import 'package:mines_sweeper/ui/theme/color.dart';
+import 'package:mines_sweeper/ui/theme/size.dart';
 import 'package:mines_sweeper/ui/theme/typographie.dart';
 
 class CellTile extends StatelessWidget {
@@ -22,13 +23,11 @@ class CellTile extends StatelessWidget {
   final VoidCallback? onCellTap;
   final Cell cell;
 
-  static const cellSize = 20.0 + OldSchoolBorder.borderWidth;
-
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: cellSize,
-      height: cellSize,
+      width: GameSizes.cell,
+      height: GameSizes.cell,
       decoration: BoxDecoration(
         border: Border.all(color: GameColor.cellBorder, width: 0.5),
       ),
@@ -106,8 +105,8 @@ class _RevealCellTile extends StatelessWidget {
 
     final content = cell is Mine
         ? const SizedBox(
-            width: CellTile.cellSize,
-            height: CellTile.cellSize,
+            width: GameSizes.cell,
+            height: GameSizes.cell,
             child: MineDraw(),
           )
         : AutoSizeText(

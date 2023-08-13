@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mines_sweeper/notifier/game_notifier.dart';
 import 'package:mines_sweeper/ui/draw/face_draw.dart';
 import 'package:mines_sweeper/ui/game_bar_button.dart';
+import 'package:mines_sweeper/ui/lcd_counter.dart';
 
 class GameBar extends StatelessWidget {
   const GameBar({super.key});
@@ -11,7 +12,7 @@ class GameBar extends StatelessWidget {
     final gameNotifier = GameNotifierProvider.of(context).gameNotifier;
 
     return Padding(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(4),
       child: ValueListenableBuilder(
         valueListenable: gameNotifier,
         builder: (context, game, child) => Row(
@@ -19,7 +20,7 @@ class GameBar extends StatelessWidget {
             ValueListenableBuilder(
               valueListenable: game.remainingMines,
               builder: (context, remainingMines, child) =>
-                  Text(remainingMines.toString()),
+                  LCDCounter(number: remainingMines),
             ),
             const Spacer(),
             GameBarButton(
@@ -29,8 +30,8 @@ class GameBar extends StatelessWidget {
             const Spacer(),
             ListenableBuilder(
               listenable: game.timeSpend,
-              builder: (context, child) => Text(
-                game.timeSpend.value.inSeconds.toString(),
+              builder: (context, child) => LCDCounter(
+                number: game.timeSpend.value.inSeconds,
               ),
             ),
           ],

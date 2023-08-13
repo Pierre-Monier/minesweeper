@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mines_sweeper/ui/old_school_border.dart';
+import 'package:mines_sweeper/ui/theme/size.dart';
 
 class GameBarButton extends StatelessWidget {
   const GameBarButton({
@@ -17,8 +18,8 @@ class GameBarButton extends StatelessWidget {
       child: GestureDetector(
         onTap: onPressed,
         child: SizedBox(
-          width: 40,
-          height: 40,
+          width: GameSizes.gameBarItem,
+          height: GameSizes.gameBarItem,
           child: icon,
         ),
       ),

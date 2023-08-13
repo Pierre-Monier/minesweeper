@@ -3,6 +3,7 @@ import 'package:mines_sweeper/game/game.dart';
 import 'package:mines_sweeper/notifier/first_revealed_mine.dart';
 import 'package:mines_sweeper/notifier/game_notifier.dart';
 import 'package:mines_sweeper/ui/cell_tile.dart';
+import 'package:mines_sweeper/ui/theme/size.dart';
 
 class GameBody extends StatelessWidget {
   const GameBody({super.key});
@@ -24,8 +25,8 @@ class GameBody extends StatelessWidget {
             mine: firstRevealedMine,
             child: ConstrainedBox(
               constraints: BoxConstraints(
-                maxWidth: CellTile.cellSize * game.config.columns,
-                maxHeight: CellTile.cellSize * game.config.rows,
+                maxWidth: GameSizes.cell * game.config.columns,
+                maxHeight: GameSizes.cell * game.config.rows,
               ),
               child: _GameCellsGrid(game: game),
             ),

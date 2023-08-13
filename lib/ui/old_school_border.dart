@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:mines_sweeper/ui/theme/color.dart';
+import 'package:mines_sweeper/ui/theme/size.dart';
 
 class OldSchoolBorder extends StatefulWidget {
   const OldSchoolBorder({
@@ -15,8 +16,6 @@ class OldSchoolBorder extends StatefulWidget {
   final bool isTapEnabled;
   final bool shouldShowBorder;
   final bool isReversed;
-
-  static const borderWidth = 3.0;
 
   @override
   State<OldSchoolBorder> createState() => _OldSchoolBorderState();
@@ -36,7 +35,7 @@ class _OldSchoolBorderState extends State<OldSchoolBorder> {
   @override
   Widget build(BuildContext context) {
     final content = Padding(
-      padding: const EdgeInsets.all(OldSchoolBorder.borderWidth),
+      padding: const EdgeInsets.all(GameSizes.oldSchoolBorder),
       child: widget.child,
     );
 
@@ -110,7 +109,7 @@ class _OldSchoolBorderRenderObject extends RenderProxyBox {
     markNeedsPaint();
   }
 
-  double get _borderWidth => OldSchoolBorder.borderWidth;
+  double get _borderWidth => GameSizes.oldSchoolBorder;
 
   @override
   void performLayout() {

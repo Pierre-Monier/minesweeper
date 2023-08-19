@@ -50,16 +50,17 @@ class _GameCellsGrid extends StatelessWidget {
         children: game.cells
             .map(
               (e) => Row(
-                children: e
-                    .map(
-                      (e) => CellTile(
-                        cell: e,
-                        onCellTap: gameStatus == GameStatus.onGoing
-                            ? () => game.tapCell(e)
-                            : null,
-                      ),
-                    )
-                    .toList(),
+                children: e.map((e) {
+                  final isGameOnGoing = gameStatus == GameStatus.onGoing;
+
+                  return CellTile(
+                    cell: e,
+                    onFlagCellTap: () => isGameOnGoing
+                        ? game.tapCell(e, gameMove: GameMove.flag)
+                        : null,
+                    onCellTap: isGameOnGoing ? () => game.tapCell(e) : null,
+                  );
+                }).toList(),
               ),
             )
             .toList(),

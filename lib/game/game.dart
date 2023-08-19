@@ -37,8 +37,6 @@ class Game {
   /// Used to know on which mine we should put a red background
   final ValueNotifier<Cell?> firstRevealedMine = ValueNotifier(null);
 
-  final ValueNotifier<GameMove> gameMove = ValueNotifier(GameMove.reveal);
-
   late final ValueNotifier<int> remainingMines = ValueNotifier(
     _remainingMines,
   );
@@ -116,7 +114,7 @@ class Game {
     return cellsData;
   }
 
-  void tapCell(Cell cell) {
+  void tapCell(Cell cell, {GameMove gameMove = GameMove.reveal}) {
     if (cell.displayMode.value == DisplayMode.revealed ||
         gameStatus.value != GameStatus.onGoing) {
       return;
@@ -124,13 +122,13 @@ class Game {
 
     _handleStartGame();
 
-    _actOnCell(cell);
+    _actOnCell(cell, gameMove: gameMove);
 
     _handleEndGame();
   }
 
-  void _actOnCell(Cell cell) {
-    switch (gameMove.value) {
+  void _actOnCell(Cell cell, {required GameMove gameMove}) {
+    switch (gameMove) {
       case GameMove.reveal:
         cell.reveal();
       case GameMove.flag:
@@ -193,11 +191,6 @@ class Game {
 
     timeSpend.stop();
     gameStatus.value = newStatus;
-  }
-
-  void toggleFlag() {
-    gameMove.value =
-        gameMove.value == GameMove.flag ? GameMove.reveal : GameMove.flag;
   }
 
   bool get _isGameEnd => gameStatus.value != GameStatus.onGoing;

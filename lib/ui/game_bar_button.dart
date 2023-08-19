@@ -15,7 +15,7 @@ class GameBarButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return OldSchoolBorder(
-      child: GestureDetector(
+      child: InkWell(
         onTap: onPressed,
         child: SizedBox(
           width: GameSizes.gameBarItem,

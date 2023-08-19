@@ -1,4 +1,10 @@
+// App only run on web
+// ignore: avoid_web_libraries_in_flutter
+import 'dart:html' hide VoidCallback;
+import 'dart:ui';
+
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:mines_sweeper/game/cell.dart';
 import 'package:mines_sweeper/game/game.dart';
@@ -17,10 +23,12 @@ class CellTile extends StatelessWidget {
   const CellTile({
     required this.cell,
     required this.onCellTap,
+    required this.onFlagCellTap,
     super.key,
   });
 
   final VoidCallback? onCellTap;
+  final VoidCallback? onFlagCellTap;
   final Cell cell;
 
   @override
@@ -36,16 +44,14 @@ class CellTile extends StatelessWidget {
         builder: (context, value, child) {
           switch (value) {
             case DisplayMode.hidden:
+            case DisplayMode.flagged:
               return _HiddenCellTile(
                 cell: cell,
+                onFlagCellTap: onFlagCellTap,
                 onCellTap: onCellTap,
               );
             case DisplayMode.revealed:
               return _RevealCellTile(cell: cell);
-            case DisplayMode.flagged:
-              return _FlagCellTile(
-                cell: cell,
-              );
           }
         },
       ),
@@ -54,10 +60,15 @@ class CellTile extends StatelessWidget {
 }
 
 class _HiddenCellTile extends StatelessWidget {
-  const _HiddenCellTile({required this.onCellTap, required this.cell});
+  const _HiddenCellTile({
+    required this.onCellTap,
+    required this.onFlagCellTap,
+    required this.cell,
+  });
 
   final Cell cell;
   final VoidCallback? onCellTap;
+  final VoidCallback? onFlagCellTap;
 
   Color _getBackgroundColor(GameStatus gameStatus) {
     if (gameStatus != GameStatus.loose) return Colors.transparent;
@@ -68,22 +79,60 @@ class _HiddenCellTile extends StatelessWidget {
     return isWrongFlag ? GameColor.wrongFlag : Colors.transparent;
   }
 
+  bool get isFlagged => cell.displayMode.value == DisplayMode.flagged;
+
   @override
   Widget build(BuildContext context) {
     final game = GameNotifierProvider.of(context).gameNotifier.value;
 
     return OldSchoolBorder(
-      isTapEnabled: onCellTap != null,
+      isTapEnabled: onCellTap != null && !isFlagged,
       child: ValueListenableBuilder(
         valueListenable: game.gameStatus,
         builder: (context, gameStatus, child) => ColoredBox(
           color: _getBackgroundColor(gameStatus),
-          child: InkWell(
-            onTap: onCellTap,
-            child: const SizedBox.shrink(),
+          child: _FlagTap(
+            onFlagCell: onFlagCellTap,
+            child: InkWell(
+              onTap: isFlagged ? null : onCellTap,
+              child: isFlagged ? const FlagDraw() : const SizedBox.shrink(),
+            ),
           ),
         ),
       ),
+    );
+  }
+}
+
+class _FlagTap extends StatefulWidget {
+  const _FlagTap({required this.child, required this.onFlagCell});
+
+  final Widget child;
+  final VoidCallback? onFlagCell;
+
+  @override
+  State<_FlagTap> createState() => _FlagTapState();
+}
+
+class _FlagTapState extends State<_FlagTap> {
+  @override
+  void initState() {
+    document.onContextMenu.listen((event) => event.preventDefault());
+    super.initState();
+  }
+
+  void _onPointerDown(PointerDownEvent event) {
+    if (event.kind == PointerDeviceKind.mouse &&
+        event.buttons == kSecondaryMouseButton) {
+      widget.onFlagCell?.call();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Listener(
+      onPointerDown: _onPointerDown,
+      child: widget.child,
     );
   }
 }
@@ -121,52 +170,6 @@ class _RevealCellTile extends StatelessWidget {
       color: cell == firstRevealedMine ? Colors.red : Colors.transparent,
       child: Align(
         child: content,
-      ),
-    );
-  }
-}
-
-class _FlagCellTile extends StatelessWidget {
-  const _FlagCellTile({required this.cell});
-
-  final Cell cell;
-
-  @override
-  Widget build(BuildContext context) {
-    return _ToggleCellTile(
-      cell: cell,
-      icon: const FlagDraw(),
-      onPressed: (game, gameMove) =>
-          gameMove == GameMove.flag ? () => game.tapCell(cell) : null,
-    );
-  }
-}
-
-class _ToggleCellTile extends StatelessWidget {
-  const _ToggleCellTile({
-    required this.cell,
-    required this.icon,
-    required this.onPressed,
-  });
-
-  final Cell cell;
-
-  final Widget icon;
-
-  final VoidCallback? Function(Game game, GameMove gameMove) onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    final game = GameNotifierProvider.of(context).gameNotifier.value;
-
-    return ValueListenableBuilder(
-      valueListenable: game.gameMove,
-      builder: (context, gameMove, child) => OldSchoolBorder(
-        isTapEnabled: false,
-        child: GestureDetector(
-          onTap: () => onPressed(game, gameMove),
-          child: icon,
-        ),
       ),
     );
   }

@@ -8,9 +8,9 @@ import 'package:mines_sweeper/game/safe.dart';
 import 'package:mines_sweeper/notifier/time_spend_notifier.dart';
 
 // TODO(Pierre): Game should change reset face button when cell is tap down (also game lost and win)
-// TODO(Pierre): draw nice led counter
-// TODO(Pierre): draw every draw
-// TODO(Pierre): handle toggle flag differently
+// TODO(Pierre): draw mine
+// TODO(Pierre): draw flag
+// TODO(Pierre): handle mobile devices
 class Game {
   Game({
     GameConfig? config,

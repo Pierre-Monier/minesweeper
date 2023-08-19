@@ -255,6 +255,8 @@ class _LCDCounterPainter extends CustomPainter {
         return _LCDPattern.height;
       case '9':
         return _LCDPattern.nine;
+      case '-':
+        return _LCDPattern.minus;
       default:
         return _LCDPattern.unknown;
     }
@@ -339,6 +341,7 @@ enum _LCDPattern {
     right2: true,
     bottom: true,
   ),
+  minus(middle: true),
   unknown();
 
   final bool up;

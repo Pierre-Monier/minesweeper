@@ -1,10 +1,8 @@
 // App only run on web
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:html' hide VoidCallback;
-import 'dart:ui';
 
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:mines_sweeper/game/cell.dart';
 import 'package:mines_sweeper/game/game.dart';
@@ -41,18 +39,15 @@ class CellTile extends StatelessWidget {
       ),
       child: ValueListenableBuilder(
         valueListenable: cell.displayMode,
-        builder: (context, value, child) {
-          switch (value) {
-            case DisplayMode.hidden:
-            case DisplayMode.flagged:
-              return _HiddenCellTile(
-                cell: cell,
-                onFlagCellTap: onFlagCellTap,
-                onCellTap: onCellTap,
-              );
-            case DisplayMode.revealed:
-              return _RevealCellTile(cell: cell);
+        builder: (context, displayMode, child) {
+          if (displayMode != DisplayMode.revealed) {
+            return _HiddenCellTile(
+              cell: cell,
+              onFlagCellTap: onFlagCellTap,
+              onCellTap: onCellTap,
+            );
           }
+          return _RevealCellTile(cell: cell);
         },
       ),
     );
@@ -121,17 +116,21 @@ class _FlagTapState extends State<_FlagTap> {
     super.initState();
   }
 
-  void _onPointerDown(PointerDownEvent event) {
-    if (event.kind == PointerDeviceKind.mouse &&
-        event.buttons == kSecondaryMouseButton) {
-      widget.onFlagCell?.call();
-    }
+  bool isOnMobileDevice() {
+    final userAgent = window.navigator.userAgent.toLowerCase();
+
+    return userAgent.contains("iphone") ||
+        userAgent.contains("android") ||
+        userAgent.contains("ipad");
   }
 
   @override
   Widget build(BuildContext context) {
-    return Listener(
-      onPointerDown: _onPointerDown,
+    return GestureDetector(
+      onSecondaryTapDown:
+          isOnMobileDevice() ? null : (_) => widget.onFlagCell?.call(),
+      onLongPressDown:
+          isOnMobileDevice() ? (_) => widget.onFlagCell?.call() : null,
       child: widget.child,
     );
   }

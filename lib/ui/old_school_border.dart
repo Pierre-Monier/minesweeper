@@ -9,6 +9,8 @@ class OldSchoolBorder extends StatefulWidget {
     this.isTapEnabled = true,
     this.shouldShowBorder = true,
     this.isReversed = false,
+    this.onTapDown,
+    this.onTapUp,
     super.key,
   });
 
@@ -16,6 +18,8 @@ class OldSchoolBorder extends StatefulWidget {
   final bool isTapEnabled;
   final bool shouldShowBorder;
   final bool isReversed;
+  final VoidCallback? onTapUp;
+  final VoidCallback? onTapDown;
 
   @override
   State<OldSchoolBorder> createState() => _OldSchoolBorderState();
@@ -41,10 +45,17 @@ class _OldSchoolBorderState extends State<OldSchoolBorder> {
 
     final child = widget.isTapEnabled
         ? GestureDetector(
+            onTapUp: (_) {
+              widget.onTapUp?.call();
+            },
+            onTapCancel: () {
+              widget.onTapUp?.call();
+            },
             onTapDown: (_) {
               setState(() {
                 _shouldShowBorder = false;
               });
+              widget.onTapDown?.call();
             },
             child: content,
           )

@@ -29,7 +29,9 @@ class GameNotifierProvider extends InheritedWidget {
     return false;
   }
 
-  static GameNotifierProvider of(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<GameNotifierProvider>()!;
+  static GameNotifier of(BuildContext context) {
+    return context
+        .dependOnInheritedWidgetOfExactType<GameNotifierProvider>()!
+        .gameNotifier;
   }
 }

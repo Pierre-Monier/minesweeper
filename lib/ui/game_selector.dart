@@ -8,7 +8,7 @@ class GameSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final gameNotifier = GameNotifierProvider.of(context).gameNotifier;
+    final gameNotifier = GameNotifierProvider.of(context);
 
     return ValueListenableBuilder(
       valueListenable: gameNotifier,

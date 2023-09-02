@@ -7,10 +7,8 @@ import 'package:mines_sweeper/game/mine.dart';
 import 'package:mines_sweeper/game/safe.dart';
 import 'package:mines_sweeper/notifier/time_spend_notifier.dart';
 
-// TODO(Pierre): Game should change reset face button when cell is tap down (also game lost and win)
-// TODO(Pierre): draw mine
-// TODO(Pierre): draw flag
 // TODO(Pierre): handle mobile devices
+// Add a pixelated effect on draw
 class Game {
   Game({
     GameConfig? config,

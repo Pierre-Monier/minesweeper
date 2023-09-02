@@ -10,6 +10,7 @@ import 'package:mines_sweeper/game/mine.dart';
 import 'package:mines_sweeper/game/safe.dart';
 import 'package:mines_sweeper/notifier/first_revealed_mine.dart';
 import 'package:mines_sweeper/notifier/game_notifier.dart';
+import 'package:mines_sweeper/notifier/is_player_tapping_notifier.dart';
 import 'package:mines_sweeper/ui/draw/flag_draw.dart';
 import 'package:mines_sweeper/ui/draw/mine_draw.dart';
 import 'package:mines_sweeper/ui/old_school_border.dart';
@@ -78,10 +79,13 @@ class _HiddenCellTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final game = GameNotifierProvider.of(context).gameNotifier.value;
+    final game = GameNotifierProvider.of(context).value;
+    final isPlayerTapping = IsPlayerTappingNotifierProvider.of(context);
 
     return OldSchoolBorder(
       isTapEnabled: onCellTap != null && !isFlagged,
+      onTapDown: isPlayerTapping.startTapping,
+      onTapUp: isPlayerTapping.stopTapping,
       child: ValueListenableBuilder(
         valueListenable: game.gameStatus,
         builder: (context, gameStatus, child) => ColoredBox(
@@ -149,7 +153,7 @@ class _RevealCellTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final firstRevealedMine = FirstRevealedMine.of(context).mine;
+    final firstRevealedMine = FirstRevealedMine.of(context);
 
     final content = cell is Mine
         ? const SizedBox(

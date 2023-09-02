@@ -1,7 +1,7 @@
 import 'dart:math';
-import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
+import 'package:mines_sweeper/ui/draw/halo_paint_mixin.dart';
 
 class MineDraw extends StatelessWidget {
   const MineDraw({super.key});
@@ -14,15 +14,13 @@ class MineDraw extends StatelessWidget {
   }
 }
 
-class _MineDrawPainter extends CustomPainter {
+class _MineDrawPainter extends CustomPainter with HaloPaintMixin {
   @override
   void paint(Canvas canvas, Size size) {
     // Constants for readability
     const double radiusReduction = 1.5;
     const double spikeLengthIncrease = 0.25;
     const double baseStrokeWidth = 3;
-    const double haloStrokeWidth = 3;
-    const double haloRadius = 1;
 
     // Calculate dimensions
     final double maxWidth = (size.width / 2) - 2;
@@ -95,27 +93,9 @@ class _MineDrawPainter extends CustomPainter {
       canvas.drawPath(baseSpikePath, baseSpikePaint);
     }
 
-    // Draw a white halo on top of the main circle of the mine
+    // Draw a white halo on top of the main circle of the mine using the HaloPaintMixin
     final haloCenter = Offset((size.width / 2) - 1, (size.height / 2) - 1);
-    final haloPaint = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = haloStrokeWidth
-      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 1)
-      ..shader = ui.Gradient.linear(
-        Offset(haloCenter.dx - 1, haloCenter.dy / 2 - 1),
-        Offset(haloCenter.dx + 1, haloCenter.dy / 2 + 1),
-        [Colors.grey.shade900, Colors.white],
-        [0.0, 1.0],
-      );
-
-    final haloPath = Path();
-    haloPath.addOval(
-      Rect.fromCircle(
-        center: haloCenter,
-        radius: haloRadius,
-      ),
-    );
-    canvas.drawPath(haloPath, haloPaint);
+    drawHaloPaint(canvas: canvas, haloCenter: haloCenter);
   }
 
   @override

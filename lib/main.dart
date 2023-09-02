@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mines_sweeper/notifier/game_notifier.dart';
+import 'package:mines_sweeper/notifier/is_player_tapping_notifier.dart';
 import 'package:mines_sweeper/ui/game_page.dart';
 
 void main() {
@@ -12,11 +13,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GameNotifierProvider(
-      child: MaterialApp(
-        theme: ThemeData(
-          fontFamily: 'MineSweeper',
+      child: IsPlayerTappingNotifierProvider(
+        child: MaterialApp(
+          theme: ThemeData(
+            fontFamily: 'MineSweeper',
+          ),
+          home: const GamePage(),
         ),
-        home: const GamePage(),
       ),
     );
   }

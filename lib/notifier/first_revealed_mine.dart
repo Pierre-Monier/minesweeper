@@ -14,7 +14,9 @@ class FirstRevealedMine extends InheritedWidget {
     return oldWidget.mine != mine;
   }
 
-  static FirstRevealedMine of(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<FirstRevealedMine>()!;
+  static Cell? of(BuildContext context) {
+    return context
+        .dependOnInheritedWidgetOfExactType<FirstRevealedMine>()!
+        .mine;
   }
 }

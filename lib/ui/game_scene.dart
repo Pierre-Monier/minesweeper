@@ -40,7 +40,7 @@ class _GameSceneState extends State<GameScene> {
 
   @override
   Widget build(BuildContext context) {
-    final gameNotifier = GameNotifierProvider.of(context).gameNotifier;
+    final gameNotifier = GameNotifierProvider.of(context);
 
     return ListenableBuilder(
       listenable: gameNotifier,

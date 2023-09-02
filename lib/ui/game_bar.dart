@@ -9,7 +9,7 @@ class GameBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final gameNotifier = GameNotifierProvider.of(context).gameNotifier;
+    final gameNotifier = GameNotifierProvider.of(context);
 
     return Padding(
       padding: const EdgeInsets.all(4),

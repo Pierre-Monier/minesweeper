@@ -24,7 +24,7 @@ class GamePage extends StatelessWidget {
                   SizedBox(
                     height: 16,
                   ),
-                  GameScene()
+                  GameScene(),
                 ],
               ),
             ),

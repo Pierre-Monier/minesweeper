@@ -2,7 +2,7 @@
 
 ## Overview
 
-![Dummy Image](https://via.placeholder.com/150)
+![Demo](https://raw.githubusercontent.com/Pierre-Monier/minesweeper/master/docs/demo.gif)
 
 `mines_sweeper` is a classic [minesweeper](https://en.wikipedia.org/wiki/Minesweeper_(video_game)) game fully implemented in Flutter. The game challenges players to clear a rectangular board containing hidden "mines" without detonating any of them.
 

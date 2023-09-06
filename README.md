@@ -14,6 +14,10 @@ Clone the repository and navigate to the project directory. Run the game using y
 
 The game starts with a grid of unmarked squares. Some randomly selected squares are designated as containing mines. The goal is to mark all the mines without uncovering any of them.
 
+## Note
+
+Currently, there are some issues with the user interface when the game is played on mobile web. Border and some interactive elements may not display correctly or provide the intended user experience. Therefore, until these issues are resolved, it is recommended to play the game on a desktop browser for the best experience.
+
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.

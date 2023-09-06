@@ -156,7 +156,7 @@ class Game {
         .where((e) => e is Safe && e.displayMode.value == DisplayMode.revealed);
 
     final hasWin =
-        revealedSafeCell.length == cells.length - config.numberOfMines;
+        revealedSafeCell.length == everyCells.length - config.numberOfMines;
 
     if (hasWin) {
       _endGame(GameStatus.win);
